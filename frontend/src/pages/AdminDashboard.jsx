@@ -13,7 +13,7 @@ export default function AdminDashboard() {
       try {
       
         const token = localStorage.getItem('token'); 
-        const response = await api.get('/users/admin', {
+        const response = await api.get('/users', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUsers(response.data);
@@ -28,7 +28,24 @@ export default function AdminDashboard() {
     fetchUsers();
   }, []);
 
-  if (loading) return <div className="text-center mt-10"><span className="loading loading-spinner loading-lg"></span></div>;
+    const handleDeleteUser = async (userId) => {
+    
+    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+    if (!confirmDelete) return;
+
+    try {
+      await api.delete(`/users/${userId}`,{headers : { Authorization: `Bearer ${token}` }});
+      
+      // Filter out the deleted user from the current state to update the UI instantly
+      setUsers(users.filter((user) => user._id !== userId));
+      
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+      alert("Error deleting user. Please try again.");
+    }
+  };
+
+    if (loading) return <div className="text-center mt-10"><span className="loading loading-spinner loading-lg"></span></div>;
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
@@ -66,6 +83,15 @@ export default function AdminDashboard() {
                 <td>
                   <span className="badge badge-success badge-sm">Active</span>
                 </td>
+                <td>
+                
+                <button 
+                  onClick={() => handleDeleteUser(user._id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </td>
               </tr>
             ))}
           </tbody>

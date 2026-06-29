@@ -6,8 +6,8 @@ import toast from "react-hot-toast";
 export default function SignUp() {
   const [formData, setFormData] = useState({
     username: "",
-    password: "",
-    role: "user", // Default role
+    password: ""
+    
   });
   const navigate = useNavigate();
 
@@ -15,7 +15,10 @@ export default function SignUp() {
     e.preventDefault();
     try {
       
-      await api.post("/auth/register", formData);
+      await api.post("/auth/register", {
+        name: formData.username,
+        password: formData.password,
+        role: 'user'});
       toast.success("Account created! Please log in.");
       navigate("/"); 
     } catch (error) {
@@ -48,15 +51,7 @@ export default function SignUp() {
               required 
             />
 
-            <select 
-              className="select select-bordered w-full"
-              value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-            >
-              <option value="user">user</option>
-              <option value="admin">admin</option>
-            </select>
-
+            
             <button type="submit" className="btn btn-primary w-full mt-2">Create Account</button>
           </form>
           
