@@ -16,7 +16,7 @@ export default function SignUp() {
     try {
       
       await api.post("/auth/register", {
-        name: formData.username,
+        username: formData.username,
         password: formData.password,
         role: 'user'});
       toast.success("Account created! Please log in.");
