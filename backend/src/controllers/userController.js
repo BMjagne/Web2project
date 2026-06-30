@@ -11,7 +11,7 @@ const getAllUsers = async function (_, res){
   }
 }
 
-export const deleteUser = async (req, res) => {
+const deleteUser = async (req, res) => {
   try {
     const userId = req.params.id;
     
